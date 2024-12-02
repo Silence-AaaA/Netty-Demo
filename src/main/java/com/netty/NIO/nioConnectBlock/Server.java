@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Server {
 
     //创建集合，存储对应的客户端信息
+
     public static ArrayList<SocketChannel> socketChannels = new ArrayList<>();
     public static void main(String[] args) throws IOException {
         //设置byteBuffer缓冲区存储数据
