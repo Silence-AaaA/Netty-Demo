@@ -1,13 +1,9 @@
-package com.netty.NIO.nioConnectBlock;
+package com.netty.NIO.nioSelectorConnect;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 
 //客户端
 public class Client {
