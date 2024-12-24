@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousChannel;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.file.Path;
@@ -16,6 +17,7 @@ public class aioFile {
     private static final Logger log = LoggerFactory.getLogger(aioFile.class);
 
     public static void main(String[] args) throws IOException{
+
         try(AsynchronousFileChannel channel = AsynchronousFileChannel.open(Paths.get("data.txt"),StandardOpenOption.READ)) {
             /**
              * 需要四个参数

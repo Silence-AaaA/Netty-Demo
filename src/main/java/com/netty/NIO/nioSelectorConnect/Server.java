@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 //非阻塞模式下一直获取连接不停止，可能就会导致其累死，理想状态下的连接，依旧是来一个客户端再进行连接，这样也不会消耗多余的资源
@@ -34,10 +33,10 @@ public class Server {
             //6.使用迭代器处理发生的事件 selectKeys当中会存储所有的KEY，这里如果我们想要对其进行更多的操作，例如删除。那么就必须使用到迭代器
             Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
             while (iterator.hasNext()) {
-                //在一开始执行就直接移除这个KEY
-                iterator.remove();
                 //获取KEY
                 SelectionKey key = iterator.next();
+                //移除当前KEY值
+                iterator.remove();
                 //判断对应的KEY的类型
                 if (key.isAcceptable()) {
                     log.debug("Accept Selected key: {}", key);
@@ -58,6 +57,8 @@ public class Server {
                     buffer.flip();
                     System.out.println(buffer);
                     buffer.compact();
+                }else if(key.isWritable()){
+                    //如果对应的KEY是写入类型的，那么直接在这里写入数据即可
                 }
 
             }
