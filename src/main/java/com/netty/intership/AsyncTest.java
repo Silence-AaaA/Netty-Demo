@@ -5,11 +5,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AsyncTest {
     public static MyArrayList<String> list = new MyArrayList();
-    public static MyArrayList<Double> V_Map = new MyArrayList();
+    public static MyArrayList<Double> Time_V_Map = new MyArrayList();
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        System.out.println("请输入要处理的模式串");
-        System.out.println("请输入要处理的文本");
+        System.out.println("👉请输入要处理的模式串👈");
+        System.out.println("👉请输入要处理的文本👈");
         String virusStr = in.next();
         String peoStr = in.next();
         AtomicInteger atomicInteger = new AtomicInteger(0);
@@ -44,12 +44,15 @@ public class AsyncTest {
             }
             list.add(atomicInteger + ":针对模式串:"+nowVirusStr+" 以及文本:"+nowPeoStr+" 此次使用KMP运行的的结果为:" + (kmp.getResult()?"YES":"NO") + "，花费了" + kmp.getRunTime() + "纳秒, 调用了" +kmp.getCallNumber()+"次");
             list.add(atomicInteger + ":针对模式串:"+nowVirusStr+" 以及文本:"+nowPeoStr+" 此次使用BF运行的的结果为:"+(bf.getResult()?"YES":"NO") + "，花费了" + bf.getRunTime() + "纳秒, 调用了" +bf.getCallNumber()+"次");
-
-            System.out.println("请输入要处理的模式串");
-            System.out.println("请输入要处理的文本");
+            double rate = (double)kmp.getRunTime() / (double)bf.getRunTime();
+            //保留两位小数
+            Time_V_Map.add(Double.valueOf(String.format("%.2f",rate)));
+            System.out.println("👉请输入要处理的模式串👈");
+            System.out.println("👉请输入要处理的文本👈");
             virusStr = in.next();
             peoStr = in.next();
         }
         list.traverse();
+        Time_V_Map.createTimeRateMap();
     }
 }
