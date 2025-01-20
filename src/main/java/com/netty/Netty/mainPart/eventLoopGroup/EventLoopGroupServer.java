@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.Charset;
 
 public class EventLoopGroupServer {
+
     private static final Logger log = LoggerFactory.getLogger(EventLoopGroupServer.class);
 
     public static void main(String[] args) {
