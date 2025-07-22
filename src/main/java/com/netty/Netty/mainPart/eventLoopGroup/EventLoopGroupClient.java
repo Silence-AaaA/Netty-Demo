@@ -2,13 +2,12 @@ package com.netty.Netty.mainPart.eventLoopGroup;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringEncoder;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
@@ -21,7 +20,7 @@ public class EventLoopGroupClient {
 
     public static void main(String[] args) throws InterruptedException {
         //1。设置启动类
-        Channel channel = new Bootstrap()
+        ChannelFuture channelFuture = new Bootstrap()
                 //2.设置事件处理组
                 .group(new NioEventLoopGroup())
                 //3.选择客户端channel实现
@@ -37,13 +36,25 @@ public class EventLoopGroupClient {
                     }
                 })
                 /** 1.建立连接 */
-                .connect(new InetSocketAddress("127.0.0.1", 8080))
-                /** 3.如果没有建立连接，那么这里实际上是处于阻塞状态的，并不会向下继续执行操作 **/
-                .sync()
-                .channel();
-        //获取到Channel对象
-        System.out.println(channel);
-        System.out.println("");  //这里我们打单个断点，不影响其他线程的正常进行
+                // 这里的connect 是一个异步非阻塞的，真正去建立链接的，是上面的事件处理组 NioEventLoopGroup
+                .connect(new InetSocketAddress("127.0.0.1", 8080));
 
+                /** 3.如果没有建立连接，那么这里实际上是处于阻塞状态的，并不会向下继续执行操作 **/
+                //2.1 要注意 这里之所以阻塞，就是因为调用了同步方法，channelFuture的sync，进行阻塞，直到NIO线程链接建立完毕
+                //channelFuture.sync();
+                //Channel channel = channelFuture.channel();
+                //// 这里使用write 跟 writeAndFlush是不一样的
+                //channel.writeAndFlush("hello world!");
+
+                //2.2 方法2，上面的sync使用的是一种阻塞方法，也就是在当前主线程中执行；除此之外，还有一种方式为异步的，使用addListener
+                channelFuture.addListener(new ChannelFutureListener() {
+                    @Override
+                    public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                        //这里的channelFuture 跟我们上面的其实是一个
+                        //我们将通道连接的创建以及结果的处理都交给NIO线程进行了，我们的主线程不再执行
+                        Channel channel = channelFuture.channel();
+                        channel.writeAndFlush("use NIO method");
+                    }
+                });
     }
 }

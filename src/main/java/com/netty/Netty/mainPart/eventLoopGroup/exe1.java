@@ -17,10 +17,11 @@ public class exe1 {
 
         //2.获取其中的EventLoop对象
         //这里获取的对象是以轮询的方式进行的
-        System.out.println(group.next());
-        System.out.println(group.next());
-        System.out.println(group.next());
-        System.out.println(group.next());
+        System.out.println(Thread.currentThread().getName() + "：" + group.next());
+        System.out.println(Thread.currentThread().getName() + "：" + group.next());
+        System.out.println(Thread.currentThread().getName() + "：" + group.next());
+        System.out.println(Thread.currentThread().getName() + "：" + group.next());
+
 
         //3.执行普通任务
         group.next().execute(()->{
